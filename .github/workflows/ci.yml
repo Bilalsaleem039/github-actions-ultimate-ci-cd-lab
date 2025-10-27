@@ -28,7 +28,7 @@ jobs:
           flake8 src/ || true
 
       - name: Run tests
-        run: PYTHONPATH=src pytest tests/ --maxfail=1 --disable-warnings -q
+        run: PYTHONPATH=./ pytest tests/ --maxfail=1 --disable-warnings -q
 
       - name: Trivy FS scan
         uses: aquasecurity/trivy-action@master
