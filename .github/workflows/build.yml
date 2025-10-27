@@ -1,0 +1,30 @@
+name: Build & Push Docker Image
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build image
+        run: |
+          IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/sample-app
+          docker build -t $IMAGE:latest .
+          docker tag $IMAGE:latest $IMAGE:${{ github.sha }}
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+
+      - name: Push image
+        run: |
+          docker push $IMAGE:latest
+          docker push $IMAGE:${{ github.sha }}
