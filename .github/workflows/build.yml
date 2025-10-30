@@ -22,11 +22,9 @@ jobs:
           IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/sample-app
           docker build -t $IMAGE:latest .
           docker tag $IMAGE:latest $IMAGE:${{ github.sha }}
-          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV  # ✅ This line keeps it for next step
 
       - name: Push image
         run: |
           docker push $IMAGE:latest
           docker push $IMAGE:${{ github.sha }}
-
-          
