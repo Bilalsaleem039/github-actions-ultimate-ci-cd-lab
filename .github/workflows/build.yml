@@ -2,7 +2,7 @@ name: Build & Push Docker Image
 
 on:
   push:
-    branches: ["main", "CI/CD"]
+    branches: ["main"]
 
 jobs:
   build:
@@ -21,7 +21,7 @@ jobs:
       - name: Build image
         id: build
         run: |
-          IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/sample-app
+          IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/sample-app:latest
           docker build -t $IMAGE:latest .
           docker tag $IMAGE:latest $IMAGE:${{ github.sha }}
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
