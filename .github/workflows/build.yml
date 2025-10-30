@@ -7,6 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -18,13 +19,17 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build image
+        id: build
         run: |
           IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/sample-app
           docker build -t $IMAGE:latest .
           docker tag $IMAGE:latest $IMAGE:${{ github.sha }}
-          echo "IMAGE=$IMAGE" >> $GITHUB_ENV  # ✅ This line keeps it for next step
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
 
       - name: Push image
+        env:
+          IMAGE: ${{ env.IMAGE }}
         run: |
+          echo "Pushing $IMAGE to Docker Hub..."
           docker push $IMAGE:latest
           docker push $IMAGE:${{ github.sha }}
